@@ -147,3 +147,46 @@ class household_income(Variable):
         """A household's income."""
         salaries = household.members("salary", period)
         return household.sum(salaries)
+    
+
+class children_allowance(Variable):
+    value_type = float
+    entity = Person
+    label = "Επίδομα Παιδιού Α21"
+    definition_period = MONTH
+
+    def formula(person, period, parameters):
+        income = person('income', period)
+        children = person.household('num_dependent_children', period)
+        resides = person('resides_in_greece', period)
+        tax_declared = person('tax_declaration_submitted', period)
+        is_single_parent = person.household('is_single_parent', period)
+
+        if not tax_declared or not resides or children == 0:
+            return 0
+
+        # Ισοδύναμη κλίμακα
+        scale = 1
+        if not is_single_parent:
+            scale += 0.5
+        for i in range(children):
+            if is_single_parent and i == 0:
+                scale += 0.5
+            else:
+                scale += 0.25
+
+        eq_income = income / scale
+
+        thresholds = parameters(period).benefits.children_allowance.thresholds
+        if eq_income <= thresholds.A:
+            cat = 'A'
+        elif eq_income <= thresholds.B:
+            cat = 'B'
+        elif eq_income <= thresholds.C:
+            cat = 'C'
+        else:
+            return 0
+
+        amounts = parameters(period).benefits.children_allowance.amount[cat]
+        return (min(children, 2) * amounts.first_two + max(children - 2, 0) * amounts.others)
+

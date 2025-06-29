@@ -1,0 +1,33 @@
+amount:
+  A:
+    first_two:
+      values:
+        2024-01-01: 70
+    others:
+      values:
+        2024-01-01: 140
+  B:
+    first_two:
+      values:
+        2024-01-01: 42
+    others:
+      values:
+        2024-01-01: 84
+  C:
+    first_two:
+      values:
+        2024-01-01: 28
+    others:
+      values:
+        2024-01-01: 56
+
+thresholds:
+  A:
+    values:
+      2024-01-01: 6000
+  B:
+    values:
+      2024-01-01: 10000
+  C:
+    values:
+      2024-01-01: 15000

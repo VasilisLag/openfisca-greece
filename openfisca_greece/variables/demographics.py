@@ -11,7 +11,7 @@ from datetime import date
 # Import from openfisca-core the objects used to code the legislation in OpenFisca
 from numpy import where
 
-from openfisca_core.periods import ETERNITY, MONTH
+from openfisca_core.periods import ETERNITY, MONTH, YEAR
 from openfisca_core.variables import Variable
 
 # Import the Entities specifically defined for this tax and benefit system
@@ -53,3 +53,17 @@ class age(Variable):
         return (period.start.year - birth_year) - where(
             is_birthday_past, 0, 1
         )  # If the birthday is not passed this year, subtract one year
+    
+
+class tax_declaration_submitted(Variable):
+    value_type = bool
+    entity = Person
+    label = "Έχει υποβάλει φορολογική δήλωση"
+    definition_period = YEAR
+
+
+class resides_in_greece(Variable):
+    value_type = bool
+    entity = Person
+    label = "Μόνιμη διαμονή στην Ελλάδα"
+    definition_period = YEAR
